@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indra Jaya Sakti Motor - Generator Tools</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Loader Animation */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #f97316;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="bg-orange-500 text-white p-2 rounded-lg shadow-sm">
+                        <i class="fa-solid fa-motorcycle text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight text-slate-900 leading-none">Indra Jaya</h1>
+                        <p class="text-xs text-slate-500 font-medium">Sakti Motor Generator Tool</p>
+                    </div>
+                </div>
+                <!-- INDICATOR API -->
+                <div class="flex items-center gap-2">
+                    <span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full border border-blue-100 flex items-center shadow-sm" title="Engine Utama">
+                        <i class="fa-brands fa-google mr-1.5"></i> Gemini AI
+                    </span>
+                    <span class="hidden sm:flex px-3 py-1 bg-slate-50 text-slate-600 text-xs font-bold rounded-full border border-slate-200 items-center shadow-sm" title="Engine Cadangan Otomatis">
+                        <i class="fa-solid fa-shield-halved mr-1.5 text-green-500"></i> Groq Backup
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT (Split View) -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
+            
+            <!-- KOLOM KIRI: INPUT (Fixed width on large screens) -->
+            <div class="lg:col-span-4 space-y-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 sticky top-24">
+                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 border-b pb-2 flex justify-between items-center">
+                        <span><i class="fa-solid fa-pen-to-square mr-1"></i> Data Produk</span>
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label for="namaProduk" class="block text-sm font-semibold text-slate-700 mb-1">
+                                Judul Produk (Batch) <span class="text-red-500">*</span>
+                            </label>
+                            <textarea id="namaProduk" rows="8" 
+                                class="w-full p-3 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition shadow-inner bg-slate-50"
+                                placeholder="Masukkan daftar judul produk di sini...&#10;Contoh:&#10;Kampas Rem Depan Vario 125&#10;Busi NGK Supra X 125"></textarea>
+                            <p class="text-xs text-slate-400 mt-1 text-right">Satu judul per baris</p>
+                        </div>
+
+                        <div>
+                            <label for="catatanPenting" class="block text-sm font-semibold text-slate-700 mb-1">
+                                Catatan Khusus (Opsional)
+                            </label>
+                            <input type="text" id="catatanPenting" 
+                                class="w-full p-3 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none transition bg-slate-50"
+                                placeholder="Contoh: Stok terbatas, Promo...">
+                        </div>
+
+                        <button id="btnGenerate" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all transform active:scale-95 flex justify-center items-center gap-2 text-base mt-2">
+                            <span>Mulai Proses Generate</span> 
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KOLOM KANAN: OUTPUT (Scrollable) -->
+            <div class="lg:col-span-8">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 min-h-[500px]">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                            <i class="fa-solid fa-list-check mr-1"></i> Hasil Optimasi & Deskripsi
+                        </h2>
+                        <div class="flex gap-2">
+                            <button onclick="window.location.reload()" class="text-xs text-slate-500 hover:text-orange-600 font-medium px-2 py-1 rounded hover:bg-slate-50 transition">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Container Hasil -->
+                    <div id="outputList" class="space-y-4">
+                        <!-- State Kosong -->
+                        <div class="flex flex-col items-center justify-center h-64 text-slate-400 text-center opacity-70">
+                            <div class="bg-slate-50 p-4 rounded-full mb-3">
+                                <i class="fa-solid fa-robot text-4xl text-slate-300"></i>
+                            </div>
+                            <p class="text-sm font-medium text-slate-500">Belum ada data diproses.</p>
+                            <p class="text-xs text-slate-400 mt-1">Masukkan judul di sebelah kiri dan klik tombol Mulai.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 mt-auto py-4">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
+            &copy; 2025 Indra Jaya Sakti Motor. Internal Tools.
+        </div>
+    </footer>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-slate-900 bg-opacity-70 z-50 flex flex-col justify-center items-center text-white backdrop-blur-sm transition-all">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl flex flex-col items-center animate-bounce-slight">
+            <div class="loader w-10 h-10 border-4 mb-4" style="border-top-color: #ea580c; border-color: #e2e8f0; border-top-width: 4px;"></div>
+            <h3 class="font-bold text-slate-800 text-lg">Sedang Memproses...</h3>
+            <p class="text-sm text-slate-500 mt-1">Mohon tunggu, AI sedang bekerja.</p>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-8 right-8 bg-slate-800 text-white px-5 py-3 rounded-lg shadow-2xl text-sm font-medium transition-all duration-300 opacity-0 translate-y-10 z-50 flex items-center gap-3 border border-slate-700">
+        <i class="fa-solid fa-circle-check text-green-400 text-lg"></i>
+        <span id="toastMsg">Notifikasi</span>
+    </div>
+
+    <!-- SCRIPT (Link ke file Logic yang sama) -->
+    <script src="popup.js"></script>
+    
+    <!-- Inline Script untuk override style toast agar cocok dengan HTML baru -->
+    <script>
+        const toastEl = document.getElementById('toast');
+        if(toastEl) toastEl.classList.add('translate-y-20', 'opacity-0');
+        
+        // CSS Helper agar class dari JS Logic terbaca dengan benar di Web App mode
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .translate-y-20 { transform: translateY(20px) !important; opacity: 0 !important; }
+            .opacity-0 { opacity: 0 !important; }
+            .hidden { display: none !important; }
+            .flex { display: flex !important; }
+            
+            /* Helper untuk elemen dinamis dari popup.js */
+            .w-full { width: 100%; }
+            .result-card { border: 1px solid #e2e8f0; border-radius: 0.75rem; overflow: hidden; transition: all 0.2s; }
+            .result-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+            .bg-slate-50 { background-color: #f8fafc; }
+            
+            /* Tombol Copy Styling ulang agar sesuai tema */
+            .result-card button.bg-blue-600 { background-color: #2563eb; transition: background 0.2s; }
+            .result-card button.bg-blue-600:hover { background-color: #1d4ed8; }
+            .result-card button.bg-slate-800 { background-color: #1e293b; transition: background 0.2s; }
+            .result-card button.bg-slate-800:hover { background-color: #0f172a; }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
