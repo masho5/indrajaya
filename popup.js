@@ -1,8 +1,19 @@
 // --- 1. KONFIGURASI API ---
 <script src="config.js"></script>
 
-let manualApiKey = window.GEMINI_API_KEY || "";
-let manualGroqApiKey = window.GROQ_API_KEY || "";
+async function panggilGeminiAI(nama, harga, catatan) {
+    const prompt = generatePrompt(nama, harga, catatan);
+
+    const res = await fetch("api/gemini.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+    });
+
+    const json = await res.json();
+    return json.candidates?.[0]?.content?.parts?.[0]?.text || "Gagal respon Gemini";
+}
+
 
 
 const apiKey = typeof window.apiKey !== 'undefined' ? window.apiKey : ""; 
